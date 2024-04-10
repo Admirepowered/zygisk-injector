@@ -47,6 +47,9 @@ jobs:
           make -C src/selinux_policydb_fix
           mv src/selinux_policydb_fix/*.kpm target
 
+          make -C src/zygisk_injector
+          mv src/zygisk_injector/*.kpm target
+
       - name: Prepare artifact
         if: success()
         id: Artifact
@@ -54,6 +57,8 @@ jobs:
           hosts_file_redirect_name=`ls -d target/hosts_file_redirect*.kpm | awk -F '(/|.kpm)' '{print $2}'` && echo "hosts_file_redirect_name=$hosts_file_redirect_name" >> $GITHUB_OUTPUT
 
           selinux_policydb_fix=`ls -d target/selinux_policydb_fix*.kpm | awk -F '(/|.kpm)' '{print $2}'` && echo "selinux_policydb_fix=$selinux_policydb_fix" >> $GITHUB_OUTPUT
+
+          injector=`ls -d target/injector*.kpm | awk -F '(/|.kpm)' '{print $2}'` && echo "injector=$injector" >> $GITHUB_OUTPUT
 
       - name: Upload hosts_file_redirect
         if: success()
@@ -63,6 +68,12 @@ jobs:
           path: 'target/${{ steps.Artifact.outputs.hosts_file_redirect_name }}*'
 
       - name: Upload selinux_policydb_fix
+        if: success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ steps.Artifact.outputs.selinux_policydb_fix }}
+          path: 'target/${{ steps.Artifact.outputs.selinux_policydb_fix }}*'
+      - name: Upload zygisk_injector
         if: success()
         uses: actions/upload-artifact@v4
         with:
