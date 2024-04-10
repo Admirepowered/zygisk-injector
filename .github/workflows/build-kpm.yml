@@ -77,8 +77,8 @@ jobs:
         if: success()
         uses: actions/upload-artifact@v4
         with:
-          name: ${{ steps.Artifact.outputs.selinux_policydb_fix }}
-          path: 'target/${{ steps.Artifact.outputs.selinux_policydb_fix }}*'
+          name: ${{ steps.Artifact.outputs.injector }}
+          path: 'target/${{ steps.Artifact.outputs.injector }}*'
 
       - name: Upload release
         if: github.event.inputs.release == 'true' && success() && !cancelled()
