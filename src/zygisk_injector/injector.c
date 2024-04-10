@@ -45,7 +45,7 @@ void before_openat_0(hook_fargs4_t *args, void *udata)
     umode_t mode = (int)syscall_argn(args, 3);
 
     char buf[1024];
-    compact_strncpy_from_user(buf, filename, sizeof(buf));
+    compat_strncpy_from_user(buf, filename, sizeof(buf));
 
     struct task_struct *task = current;
     pid_t pid = -1, tgid = -1;
@@ -69,7 +69,9 @@ static long zygisk_fork_init(const char *args, const char *event, void *__user r
 {
     long ret = 0;
     margs = args;
-    do_fork = (typeof(do_fork))kallsyms_lookup_name("do_fork");
+    //do_fork = (typeof(do_fork))kallsyms_lookup_name("do_fork");
+    typedef long (*do_fork_ptr_t)(struct pt_regs *, unsigned long, unsigned long, unsigned long, int __user *, int __user *);
+do_fork_ptr_t do_fork = (do_fork_ptr_t)kallsyms_lookup_name("do_fork");
     pr_info("kernel function do_fork addr: %llx\n", do_fork);
     printInfo();
     pr_info("HFR: initializing ...\n");
