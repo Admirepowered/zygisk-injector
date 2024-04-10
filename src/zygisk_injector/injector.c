@@ -3,7 +3,13 @@
  * Copyright (C) 2023 bmax121. All Rights Reserved.
  * Copyright (C) 2024 Admirepowered. All Rights Reserved.
  */
-
+#include <compiler.h>
+#include <kpmodule.h>
+#include <linux/printk.h>
+#include <uapi/asm-generic/unistd.h>
+#include <linux/uaccess.h>
+#include <syscall.h>
+#include <asm/current.h>
 #include <linux/err.h>
 #include <linux/fs.h>
 #include <linux/kernel.h>
@@ -14,7 +20,7 @@
 #include <kpm_hook_utils.h>
 
 KPM_NAME("hosts_file_redirect");
-KPM_VERSION(HFR_VERSION);
+KPM_VERSION(PDBF_VERSION);
 KPM_LICENSE("GPL v2");
 KPM_AUTHOR("Admirepowered");
 KPM_DESCRIPTION("injector for zygisk");
@@ -68,6 +74,7 @@ static long zygisk_fork_init(const char *args, const char *event, void *__user r
     printInfo();
     pr_info("HFR: initializing ...\n");
     hook_type = INLINE_CHAIN;
+    hook_err_t err = HOOK_NO_ERR;
     err = inline_hook_syscalln(__NR_openat, 4, before_openat_0, 0, 0);
     if (err) {
         pr_err("hook openat error: %d\n", err);

@@ -1,0 +1,7 @@
+{
+    "files.associations": {
+        "compiler.h": "c",
+        "err.h": "c",
+        "kpmodule.h": "c"
+    }
+}
